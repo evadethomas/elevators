@@ -9,10 +9,6 @@ public class elevators {
     static int elevatorCapacity;
     static int duration;
 
-
-
-
-
     public static void main(String[] args) throws Exception {
         // get all the system properties
 
@@ -30,7 +26,6 @@ public class elevators {
             duration = Integer.valueOf(prop.getProperty("duration"));
 
         } else {
-
             try {
                 FileReader propFile = new FileReader(args[0]);
                 prop.load(propFile);
@@ -41,16 +36,10 @@ public class elevators {
 
         ElevatorSimulator simulation = new ElevatorSimulator();
 
-        simulation.generatePassenger();
+
+        simulation.runSimulation();
 
 //Questions -> when do we generate code for them to appear
-
-
-
-
-
-
-
 
         }
 }
