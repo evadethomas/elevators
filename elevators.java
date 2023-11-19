@@ -36,7 +36,6 @@ public class elevators {
 
         ElevatorSimulator simulation = new ElevatorSimulator();
 
-
         simulation.runSimulation();
 
 //Questions -> when do we generate code for them to appear

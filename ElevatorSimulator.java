@@ -1,12 +1,16 @@
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 public class ElevatorSimulator {
     static ArrayList<Elevator> elevatorList;
     static ArrayList<Floor> floorList;
     static int tick;
-
     static int currentTick;
+
+    static int maxReqStop = -1;
+
+    static int minReqStop = -1;
 
     public ElevatorSimulator() {
 
@@ -33,29 +37,47 @@ public class ElevatorSimulator {
 
     public static void runSimulation() {
         //generatePassenger();
-        elevatorList.get(0).loadAndUnload();
+        //elevatorList.get(0).loadAndUnload();
+        boolean firstLoad = true;
+
         while (currentTick < tick) {
             generatePassenger();
             printWaitingPassengers();
             //printWaitingPassengers();
-            for (int i = 0; i < elevatorList.size(); i++) {
-                elevatorList.get(i).travel();
-                elevatorList.get(i).loadAndUnload();
-                System.out.print("current floor" + elevatorList.get(i).ElevFloor);
-            }
+            //for (int i = 0; i < elevatorList.size() - 1; i++) {
+            System.out.print("current floor pre-load\n" + elevatorList.get(0).ElevFloor);
+            elevatorList.get(0).loadAndUnload();
+            System.out.print("Passengers after loadAndUnload: \n");
+            printWaitingPassengers();
+            elevatorList.get(0).printElevator();
+            System.out.print("current floor post-load, pre-travel\n" + elevatorList.get(0).ElevFloor);
+            elevatorList.get(0).travel();
+            System.out.print("current floor post-travel\n" + elevatorList.get(0).ElevFloor);
+                /*
+                if (elevatorList.get(i).up == true) {
+                    if (elevatorList.get(i).ElevFloor != elevatorList.size() - 1) {
+                        elevatorList.get(i).setFloor(elevatorList.get(i).ElevFloor + 1);
+                    } else {
+                        elevatorList.get(i).changeDirection();
+                    }
+                } else {
+                    if (elevatorList.get(i).ElevFloor != 0) {
+                        elevatorList.get(i).setFloor(elevatorList.get(i).ElevFloor - 1);
+                    } else {
+                        elevatorList.get(i).changeDirection();
+                    }
+                }
+                */
+
             currentTick += 1;
             printWaitingPassengers();
-            if (currentTick == 3) {
-                break;
-            }
         }
 
-
-
-
-
-
     }
+
+
+
+
 
     public static void generatePassenger() {
 
@@ -70,6 +92,10 @@ public class ElevatorSimulator {
 
                 Passenger pass = new Passenger();
                 pass.setStartFloor(i);
+                Random rand = new Random();
+                while (pass.StartFloor == pass.EndFloor) {
+                    pass.setEndFloor(rand.nextInt(elevators.floorNumber));
+                }
                 toAdd.addPass(pass);
             }
         }
@@ -94,6 +120,16 @@ public class ElevatorSimulator {
 
         }
     }
+
+    public static void requestStop(int floor) {
+        if (floor < minReqStop) {
+            minReqStop = floor;
+        } else if (floor > maxReqStop) {
+            maxReqStop = floor;
+        }
+    }
+
+
 
 
 

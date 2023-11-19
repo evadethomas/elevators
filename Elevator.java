@@ -34,7 +34,7 @@ public class Elevator {
     public void travel() {
         int highestTravel = ElevFloor + 5;
         if (ElevFloor + 5 > elevators.floorNumber - 1) {
-            highestTravel = elevators.floorNumber;
+            highestTravel = elevators.floorNumber - 1;
         }
         if (up == true) {
             int dropOffFloor = highestTravel;
@@ -73,15 +73,15 @@ public class Elevator {
             int pickUpFloor = lowestTravel;
 
             for (int i = ElevFloor; i > lowestTravel; i--) {
-                if (ElevatorSimulator.floorList.get(i).upIsEmpty() == false) {
+                if (ElevatorSimulator.floorList.get(i).downIsEmpty() == false) {
                     pickUpFloor = i;
                     break;
                 }
             }
 
-            if (dropOffFloor < pickUpFloor) {
+            if (dropOffFloor > pickUpFloor) {
                 ElevFloor = dropOffFloor;
-            } else if (dropOffFloor > pickUpFloor) {
+            } else if (dropOffFloor < pickUpFloor) {
                 ElevFloor = pickUpFloor;
             } else {
                 ElevFloor = lowestTravel;
@@ -109,12 +109,17 @@ public class Elevator {
         */
     }
 
-    public void requestStop() {
-
+    public void changeDirection() {
+        if (up == true) {
+            up = false;
+        } else {
+            up = true;
+        }
     }
 
     public void loadAndUnload() {
         Floor currFloor = ElevatorSimulator.floorList.get(ElevFloor);
+
         if (currFloor.queUp.size() > 0 && up == true) {
             for (int i = 0; i < currFloor.queUp.size(); i++) {
                 Passenger pass = currFloor.queUp.remove(i);
@@ -123,39 +128,51 @@ public class Elevator {
         } else if (currFloor.queDown.size() > 0 && up == false) {
             for (int i = 0; i < currFloor.queDown.size(); i++) {
                 Passenger pass = currFloor.queDown.remove(i);
-                stopDown.add(pass);
+                System.out.println(stopDown.add(pass));
             }
         }
         while (stopUp.peek() != null && stopUp.peek().EndFloor == ElevFloor) {
             Passenger curr = stopUp.poll();
-            /* For testing:
             System.out.print("Dropped off ");
             curr.printPassenger();
             System.out.println(" at " + ElevFloor);
-            */
         }
         while (stopDown.peek() != null && stopDown.peek().EndFloor == ElevFloor) {
             Passenger curr = stopDown.poll();
-            /* For testing:
+
             System.out.print("Dropped off ");
             curr.printPassenger();
             System.out.println(" at " + ElevFloor);
-            */
+
+        }
+
+        if (up == true && ElevFloor != elevators.floorNumber - 1) {
+            ElevFloor += 1;
+        } else if (up == true && ElevFloor == elevators.floorNumber - 1) {
+            up = false;
+            ElevFloor -= 1;
+        } else if (up == false && ElevFloor == 0) {
+            up = true;
+            ElevFloor += 1;
+        } else {
+            ElevFloor = 0;
         }
 
         //The following commented out code ensures heaps work properly. Switch "Up" to "Down" in 2 lines to check up
         //queue instead.
-        /*
+
+
+    }
+
+    public void printElevator() {
         System.out.println("HEAP TEST: \n");
         PriorityQueue<Passenger> temp = new PriorityQueue<>(stopUp);
         while (temp.isEmpty() == false && temp.peek() != null) {
-                Passenger curr = temp.poll();
-                curr.printPassenger();
+            Passenger curr = temp.poll();
+            curr.printPassenger();
         }
 
         System.out.println("DONE WITH HEAP TEST");
-
-         */
     }
 
 }

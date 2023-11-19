@@ -17,12 +17,17 @@ public class Passenger {
             this.EndFloor = rand.nextInt(elevators.floorNumber);
         }
 
+        ElevatorSimulator.requestStop(EndFloor);
+
         startTime = ElevatorSimulator.currentTick;
 
     }
 
     public void setStartFloor(int floor) {
         this.StartFloor = floor;
+    }
+    public void setEndFloor(int floor) {
+        this.EndFloor = floor;
     }
 
     public void setEndTime(int tick) {
